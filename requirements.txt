@@ -1,0 +1,7 @@
+mediapipe; platform_system != "Darwin" or platform.machine != "arm64"
+mediapipe-silicon; platform_system == "Darwin" and platform.machine == "arm64"
+protobuf>=3.11,<4
+opencv-python~=4.8.0.76
+
+numpy~=1.25.2
+Flask~=2.3.2
