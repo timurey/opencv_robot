@@ -3,7 +3,7 @@ import cv2
 # font
 font = cv2.FONT_HERSHEY_SIMPLEX
 # org
-org = (50, 50)
+org = (80, 50)
 # fontScale
 fontScale = 1
 # Blue color in BGR
@@ -19,7 +19,7 @@ class OSDModule():
         else:
             self.name = "zrak"
         self.batteryCharge = [0]
-        self.orgsBattery = [(30, 180), (60, 180)]
+        self.orgsBattery = [(420, 320), (420+1038-200, 320)]
 
     def setName(self, name_):
         self.name = name_
@@ -27,10 +27,12 @@ class OSDModule():
     def setBatteryCharging(self, battery, charging):
         self.batteryCharge[battery] = charging
 
-    def doOSD(self, frame):
+    def doOSD(self, frame, stereo):
         frame = cv2.putText(frame, 'bat0[' + str(self.batteryCharge[0]) + '%]', self.orgsBattery[0],
                             font, fontScale, color, thickness, cv2.LINE_AA)
-
+        if stereo==True:
+            frame = cv2.putText(frame, 'bat0[' + str(self.batteryCharge[0]) + '%]', self.orgsBattery[1],
+                                font, fontScale, color, thickness, cv2.LINE_AA)
         return frame
 
 

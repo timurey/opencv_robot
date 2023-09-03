@@ -12,6 +12,10 @@ HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
 HandLandmarkerResult = mp.tasks.vision.HandLandmarkerResult
 VisionRunningMode = mp.tasks.vision.RunningMode
 
+GestureRecognizer = mp.tasks.vision.GestureRecognizer
+GestureRecognizerOptions = mp.tasks.vision.GestureRecognizerOptions
+GestureRecognizerResult = mp.tasks.vision.GestureRecognizerResult
+# VisionRunningMode = mp.tasks.vision.RunningMode
 
 class MediapipeHandsModule:
     def __init__(self):
@@ -25,6 +29,11 @@ class MediapipeHandsModule:
             num_hands=2,
             result_callback=self.print_handmarker_result)
 
+        self.gestureRecognizerOptions=GestureRecognizerOptions(
+            base_options=BaseOptions(model_asset_path=gesture_recognizer_task),
+            running_mode=VisionRunningMode.LIVE_STREAM,
+            num_hands=2,
+            result_callback=self.print_gesturerecognizer_result)
     def draw_landmarks_on_image(self, rgb_image, detection_result):
         hands_landmarks_list = detection_result.hand_landmarks
         # pose_landmarks_list = detection_result
@@ -48,25 +57,37 @@ class MediapipeHandsModule:
 
     def print_handmarker_result(self, result: HandLandmarkerResult, output_image: mp.Image, timestamp_ms: int):
         print('hands landmarker result: {}'.format(result))
-        self.results = result
+        self.handmarker_results = result
+        # print(type(result))
+
+    def print_gesturerecognizer_result(self, result: GestureRecognizerResult, output_image: mp.Image, timestamp_ms: int):
+        # print('gesture recognizer result: {}'.format(result))
+        # self.results = result
+        for gesture in result.gestures:
+            print([category.category_name for category in gesture])
         # print(type(result))
 
     def getGestures(self, frame):
         results_ = None
-        with HandLandmarker.create_from_options(self.landmarkerOptions) as landmarker:
+        with GestureRecognizer.create_from_options(self.gestureRecognizerOptions) as recognizer:
             self.timestamp += 1
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
-            landmarker.detect_async(mp_image, self.timestamp)
+            recognizer.recognize_async(mp_image, self.timestamp)
 
             # print(type(self.results))
 
-            if (bool(self.results.hand_landmarks)):
-                annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), self.results)
-                # cv2.imshow('Show',cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
-                print("showing detected image")
-                results_ = self.results
-                self.results = None
-                return annotated_image, results_
+            if bool(self.results):
+                if bool(self.results.hand_landmarks):
+                    landmarks_annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), self.results)
+                    # cv2.imshow('Show',cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
+                    print("showing detected image")
+
+                # if bool(self.results.gesturs):
+                #     gesture_annotated_image = self.draw_landmarks_on_image(mp_image.numpy_view(), self.results)
+
+                    results_ = self.results
+                    self.results = None
+                    return landmarks_annotated_image, results_
 
         return frame, results_
 
