@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
     <title>CVbot</title>
 	<script src="/static/joy.js"></script>
 	<style>
@@ -22,6 +23,7 @@
 	}
 	
 	#video {
+		object-fit: cover;
 		width: 100vw;
 		height: 100vh;
 		display: block;
@@ -71,5 +73,8 @@
 		setInterval(function(){control(joy.GetX(), joy.GetY());}, 50);
 		
 	</script>
+<script>
+	console.log(window.navigator.standalone);
+</script>
 </body>
 </html>
