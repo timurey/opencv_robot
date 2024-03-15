@@ -62,60 +62,8 @@ void setup() {
     delay(1000);
   }
 
-  // Serial.println("HW generator example:\n");
-
-  // Feedback->hvGeneratorState = radSens.getHVGeneratorState(); /*Returns state of high-voltage voltage Converter.
-  //                                                          If return true -> on
-  //                                                          If return false -> off or sensor isn't conneted*/
-
-  // Serial.print("\n\t HV generator state: ");
-  // Serial.println(Feedback->hvGeneratorState);
-  // Serial.println("\t setHVGeneratorState(false)... ");
-
-  // radSens.setHVGeneratorState(false); /*Set state of high-voltage voltage Converter.
-  //                                       if setHVGeneratorState(true) -> turn on HV generator
-  //                                       if setHVGeneratorState(false) -> turn off HV generator*/
-
-  // Feedback->hvGeneratorState = radSens.getHVGeneratorState();
-  // Serial.print("\t HV generator state: ");
-  // Serial.println(Feedback->hvGeneratorState);
-  // Serial.println("\t setHVGeneratorState(true)... ");
-
-  // radSens.setHVGeneratorState(true);
-
-  // Feedback->hvGeneratorState = radSens.getHVGeneratorState();
-  // Serial.print("\t HV generator state: ");
-  // Serial.println(Feedback->hvGeneratorState);
-  // Serial.println("-------------------------------------");
-  // Serial.println("LED indication control example:\n");
-
-  // Feedback->ledState = radSens.getLedState(); /*Returns state of LED indicator.
-  //                                                          If return true -> on
-  //                                                          If return false -> off*/
-
-  // Serial.print("\n\t LED indication state: ");
-  // Serial.println(Feedback->ledState);
-  // Serial.println("\t turn off LED indication... ");
-
-  // radSens.setLedState(false); /*Set state of LED indicator.
-  //                                       if setHVGeneratorState(true) -> turn on LED indicator
-  //                                       if setHVGeneratorState(false) -> turn off LED indicator*/
-  // Feedback->ledState = radSens.getLedState();
-  // Serial.print("\t LED indication state: ");
-  // Serial.println(Feedback->ledState);
-  // Serial.println("\t turn on led indication... ");
-
-  // radSens.setLedState(true);
-
-  // Feedback->ledState = radSens.getLedState();
-  // Serial.print("\t LED indication state: ");
-  // Serial.print(Feedback->ledState);
-  // Serial.println("\n-------------------------------------");
-  // delay(5000);
 
   answer["name"] = "Rover radsense shield";
-  // answer["control type"] = "steer";
-  // answer["module type"] = "chassis";
   answer["version"] = VERSION;
   serializeJson(answer, Serial);
 }
@@ -124,7 +72,7 @@ void sendStatus() {
 
   answer["status"]["radsens"]["intensyStatic"] = radSens.getRadIntensyStatic();
   answer["status"]["radsens"]["intensyDynamic"] = radSens.getRadIntensyDynamic();
-  answer["status"]["radsens"]["sensorChipId"] = "0x"+String(radSens.getChipId(), HEX);
+  answer["status"]["radsens"]["sensorChipId"] = "0x" + String(radSens.getChipId(), HEX);
   answer["status"]["radsens"]["firwareVersion"] = radSens.getFirmwareVersion();
   answer["status"]["radsens"]["pulseCount"] = radSens.getNumberOfPulses();
   // answer["status"]["radsens"]["adressI2C"] = "0x"+String(radSens.getSensorAddress(), HEX);
@@ -153,30 +101,36 @@ void recieveDataFromHost(void) {
         if (!setLedState.equalsIgnoreCase("null")) {
           if (setLedState.equalsIgnoreCase("true")) {
             radSens.setLedState(true);
+#if (SERIAL_DEBUG == 1)
             Serial.println("Led ON");
+#endif
           } else if (setLedState.equalsIgnoreCase("false")) {
             radSens.setLedState(false);
+#if (SERIAL_DEBUG == 1)
             Serial.println("Led OFF");
+#endif
           }
         }
         if (!setHVGeneratorState.equalsIgnoreCase("null")) {
           if (setHVGeneratorState.equalsIgnoreCase("true")) {
             radSens.setHVGeneratorState(true);
+#if (SERIAL_DEBUG == 1)
             Serial.println("HVGen ON");
+#endif
           } else if (setHVGeneratorState.equalsIgnoreCase("false")) {
             radSens.setHVGeneratorState(false);
+#if (SERIAL_DEBUG == 1)
             Serial.println("HVGen OFF");
+#endif
           }
         }
-
         if (!setSensitivity.equalsIgnoreCase("null")) {
-          Serial.print("setSensitivity.length()");
-          Serial.print(setSensitivity);
-          Serial.println(setSensitivity.length());
           uint16_t sensitivity = jsondoc["configure"]["setSensitivity"].as<int>();
           radSens.setSensitivity(sensitivity);
+#if (SERIAL_DEBUG == 1)
           Serial.print("Set sensivity to ");
           Serial.println(sensitivity);
+#endif
         }
       }
     } else {
