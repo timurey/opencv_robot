@@ -54,6 +54,12 @@ DynamicJsonDocument answer(1024);
 
 void setup() {
   Serial.begin(115200);
+  delay(5000);
+
+  Wire.setSDA(0);
+  Wire.setSCL(1);
+  // Serial.println(SDA);
+  // Serial.println(SCL);
   Wire.begin();  // This function initializes the Wire library
   delay(1000);
   while (!radSens.init()) /*Initializates function and sensor connection. Returns false if the sensor is not connected to the I2C bus.*/
