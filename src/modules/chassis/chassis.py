@@ -23,6 +23,7 @@ class Chassis:
         self.sendFreq = 10
         self.lock = threading.Lock()
         self.tread = threading.Thread(target=self.sender,  daemon=True)
+
         self.answer = {}
         print("Connecting to chassis type: ", self.chassistype, " on serial: ", self.serial_port, " with baudrate: ", self.baudrate)
         self.serialPort = serial.Serial(self.serial_port, self.baudrate)
@@ -91,6 +92,19 @@ class Chassis:
             while self.running:
                 self.moving()
 
+                # answer = self.serialPort.readline()
+                # if is_json(answer):
+                #     self.answer = json.loads(answer)
+                    # print(self.answer)
+                    # todo: сделать остановку по тайм-ауту
+                    #
+                    # controlX = 0  # failsafe: останавливаемся в случае обрыва связи
+                    # controlY = 0  # failsafe: останавливаемся в случае обрыва связи
+                    #
+                time.sleep(1 / self.sendFreq)
+    def receiver(self):
+        with self.lock:
+            while self.running:
                 answer = self.serialPort.readline()
                 if is_json(answer):
                     self.answer = json.loads(answer)

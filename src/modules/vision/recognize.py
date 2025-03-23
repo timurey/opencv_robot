@@ -4,7 +4,7 @@ from .gesture_recognition import MediapipeHandsModule
 # font
 font = cv2.FONT_HERSHEY_SIMPLEX
 # org
-org = (50, 50)
+org = (450, 450)
 # fontScale
 fontScale = 1
 # Blue color in BGR

@@ -26,18 +26,29 @@ args_ = {
     'chassis': {
         'serial': args.serial
     },
+    'manipulator': {
+
+    },
+    'radsens': {
+
+    },
     "camera": {
 
     }}
 
 
-def read_config(section, key):
-    x = args_.get(section).get(key) or config[section][key]
+def read_config(section, key, _type="string"):
+    x = args_.get(section).get(key) or config[section][key] or None
     if isinstance(x, str):
         if x.lower() in ['true', 'yes', 'yeah', 'yup', 'certainly', 'uh-huh']:
             x = True
         elif x.lower() in ['false', 'no', 'nope', 'oh-no']:
             x = False
-    print('Getting params: \'{0}\' \'{1}\', args is: \'{2}\', config file is: \'{3}\', returned value: \'{4}\''
-          .format(section, key, args_.get(section).get(key), config[section][key], x))
+
+    # print('Getting params: \'{0}\' \'{1}\', args is: \'{2}\', config file is: \'{3}\', returned value: \'{4}\''
+    #       .format(section, key, args_.get(section).get(key), config[section][key], x))
+    if _type == 'int':
+        return int(x)
+    if _type == 'float':
+        return float(x)
     return x
