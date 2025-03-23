@@ -22,12 +22,12 @@ screenWidth, screenHeight = 896, 414  # размер экрана пользов
 def shut_down(really):
     if really != "true":
         return
-    # print("shutting down")
-    # command = "/usr/bin/sudo /sbin/shutdown -h now"
-    # import subprocess
-    # process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
-    # output = process.communicate()[0]
-    # print(output)
+    print("shutting down")
+    command = "/usr/bin/sudo /sbin/shutdown -h now"
+    import subprocess
+    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+    output = process.communicate()[0]
+    print(output)
 
 
 def getFramesGenerator():
