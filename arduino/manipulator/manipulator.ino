@@ -737,7 +737,9 @@ void moveJointWithSpeed(uint jointIndex, int deg, uint16_t speed) {
     set_moving_speed(dxID2, slave_speed);
   }
 }
-
+void reset(){
+  HAL_NVIC_SystemReset();
+}
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
@@ -887,7 +889,12 @@ void recieveDataFromHost(void) {
       // Serial.println("is Json");
       // serializeJson(jsonIn, Serial);
       hostTimeRecivie = timeNow + getHostTimeout();
-      if (jsonIn["configure"]) {
+      if (jsonIn["reset"]){
+        Serial.println("{\"status\": \"resetting\"");
+        disableDX();
+        reset();
+      }
+      else if (jsonIn["configure"]) {
 
         Serial.println("\nConfiguring Dynamixels:");
         JsonArray configutation_joints = jsonIn["configure"]["joint"];

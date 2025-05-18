@@ -27,6 +27,7 @@ class ManipulatorConfig:
             self,
             serial_port: str,
             baudrate: int,
+            resetCommand: json,
 
             a_joint_mode: str,
             a_joint_id: int,
@@ -238,6 +239,7 @@ class ManipulatorConfig:
         self.g_dynamixel_torque_limit = g_dynamixel_torque_limit
         self.g_dynamixel_reverse = g_dynamixel_reverse
 
+        self.resetCommand = {"reset": True}
 
 class ManipulatorStatus:
     def __init__(self,
@@ -506,6 +508,9 @@ class Manipulator:
                 ]
             }
         }
+        # First reset controller
+        self.serialPort.write(json.dumps(self.resetCommand, ensure_ascii=False).encode("utf8"))
+        print(json.dumps(self.resetCommand, ensure_ascii=False).encode("utf8"))
 
         while True:
             # Read a line of data from the serial port
